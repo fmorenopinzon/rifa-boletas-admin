@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Administrador de Boletas · RIFA 2026 (Google Sheets)</title>
+  <title>Registro de Boletas · RIFA 2026</title>
   <style>
     :root {
       --bg: #07111f;
@@ -90,12 +90,12 @@
       <div class="brand">
         <div class="mark" aria-hidden="true"></div>
         <div>
-          <div class="eyebrow">RIFA 2026 · Administración de boletas</div>
-          <strong>HELIO / BOLETAS</strong>
+          <div class="eyebrow">RIFA 2026 · Registro de boletas</div>
+          <strong>Fondo Socios RIFA / BOLETAS</strong>
         </div>
       </div>
-      <h1>Administrador de boletas<br /><span>con Google Sheets.</span></h1>
-      <p class="lead">Consulta y actualiza boletas mediante una Web App de Google Apps Script. La página no necesita Excel local ni ventanas de diálogo.</p>
+      <h1>Administrador de boletas<br /></h1>
+      <p class="lead">Consulta y actualiza boletas mediante una Web App.</p>
       <div class="rule"></div>
     </header>
 
@@ -104,13 +104,14 @@
       <div class="panel">
         <div class="control-row">
           <div class="field">
-            <label for="appsScriptUrl">URL de la Web App</label>
-            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec" />
+            <!--label for="appsScriptUrl">URL de la Web App</label>
+            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec" readonly hidden="true" /-->
+            
           </div>
-          <button id="saveUrl" type="button">Guardar URL</button>
+          <!--button id="saveUrl" type="button">Guardar URL</button-->
           <button id="reloadData" class="primary" type="button">Cargar datos</button>
         </div>
-        <p class="quiet" style="margin-top:10px;font-size:12px">Pegue aquí la URL publicada de su Web App de Google Apps Script. La URL se guarda en el navegador.</p>
+        <!--p class="quiet" style="margin-top:10px;font-size:12px">Pegue aquí la URL publicada de su Web App de Google Apps Script. La URL se guarda en el navegador.</p-->
         <div id="connectionStatus" class="status warn">Sin conexión configurada.</div>
       </div>
     </section>
@@ -186,7 +187,8 @@
   </main>
 
   <script>
-    const APPS_SCRIPT_URL = localStorage.getItem('rifaAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec';
+    //const APPS_SCRIPT_URL = localStorage.getItem('rifaAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec';
     const state = {
       associates: [],
       selectedAssociate: '',
