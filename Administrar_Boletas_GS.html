@@ -100,7 +100,7 @@
     </header>
 
     <section>
-      <div class="section-title"><h2>1. Conexión</h2><div class="kicker">URL de Apps Script</div></div>
+      <div class="section-title"><h2>Conexión</h2><div class="kicker">URL de Apps Script</div></div>
       <div class="panel">
         <div class="control-row">
           <div class="field">
@@ -114,18 +114,31 @@
         <!--p class="quiet" style="margin-top:10px;font-size:12px">Pegue aquí la URL publicada de su Web App de Google Apps Script. La URL se guarda en el navegador.</p-->
         <div id="connectionStatus" class="status warn">Sin conexión configurada.</div>
       </div>
+
     </section>
 
     <section>
+      <div class="panel">
+        <div class="section-title"><h2>1. Asociado</h2><div class="kicker">Asociado que Registra</div></div>
+          <div class="field" style="margin-top:12px;max-width:420px">
+            <label for="associateSelect">Asociado</label>
+            <select id="associateSelect" disabled>
+              <option value="">Seleccione un asociado para habilitar la consulta</option>
+            </select>
+          </div>
+        </div>
+    </section>
+
+    <section id="searchSection" style="display:none">
       <div class="section-title"><h2>2. Consultar boleta</h2><div class="kicker">Búsqueda por número</div></div>
       <div class="panel">
         <div class="control-row">
-          <div class="field">
+          <!--div class="field">
             <label for="associateSelect">Asociado</label>
             <select id="associateSelect" disabled>
               <option value="">Primero cargue los datos</option>
             </select>
-          </div>
+          </div-->
           <div class="field">
             <label for="searchNumber">Número de boleta o número asignado</label>
             <input id="searchNumber" type="number" min="0" max="999" placeholder="Ejemplo: 188" disabled />
@@ -138,7 +151,7 @@
       </div>
     </section>
 
-    <section>
+    <section id="editSection" style="display:none">
       <div class="section-title"><h2>3. Actualizar información</h2><div class="kicker">Solo si la boleta no está vendida</div></div>
       <div class="panel">
         <form id="editForm">
@@ -384,11 +397,27 @@
       });*/
       $('#reloadData').addEventListener('click', loadAssociates);
       $('#associateSelect').addEventListener('change', () => {
+
+        //state.selectedAssociate = '';
+        //const associateSelect = $('#associateSelect');
+        //if (associateSelect) associateSelect.value = '';
+
         state.selectedAssociate = $('#associateSelect').value;
+        
         const show = !!state.selectedAssociate;
+
+        //Se verifica para ver si se muestran las secciones de Consulta y Edición
+        const searchSection = document.getElementById('searchSection');
+        const editSection = document.getElementById('editSection');
+        if (searchSection) searchSection.style.display = show ? '' : 'none';
+        if (editSection) editSection.style.display = show ? '' : 'none';
+
         $('#searchNumber').disabled = !show;
         $('#searchBtn').disabled = !show;
         $('#clearBtn').disabled = !show;
+
+        //$('#editSection').disabled = !show;
+
         if (show) setStatus($('#searchStatus'), 'Asociado seleccionado: ' + state.selectedAssociate + '. Ahora puede consultar boletas.', 'ok');
         else setStatus($('#searchStatus'), '', '');
       });
