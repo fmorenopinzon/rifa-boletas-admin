@@ -278,11 +278,11 @@
       const paidText = paidMarked ? 'Si' : 'No';
       const result = $('#result');
       result.innerHTML = `
-        <div class="result-row"><div class="result-label">Fila en Excel</div><div class="result-value mono">${data.row || '—'}</div></div>
-        <div class="result-row"><div class="result-label">Asociado</div><div class="result-value">${escapeHtml(associate)} ${belongsTo ? '' : '<span class="tag risk">No corresponde</span>'}</div></div>
+        <!--div class="result-row"><div class="result-label">Fila en Excel</div><div class="result-value mono">${data.row || '—'}</div></div-->
+        <div class="result-row"><div class="result-label">Asociado</div><div class="result-value">${escapeHtml(associate)} ${belongs ? '' : '<span class="tag risk">No corresponde</span>'}</div></div>
         <div class="result-row"><div class="result-label">Números</div><div class="result-value"><div class="numbers">${numbers.map((n) => `<span class="number-pill">${n}</span>`).join('')}</div></div></div>
-        <div class="result-row"><div class="result-label">Validación</div><div class="result-value">${belongsTo ? '<span class="tag good">Pertenece al asociado seleccionado</span>' : '<span class="tag risk">No pertenece al asociado seleccionado; no se permite actualizar</span>'}</div></div>
-        <div class="result-row"><div class="result-label">Vendida</div><div class="result-value">${soldText} ${soldMarked ? '<span class="tag warn">No editable</span>' : (belongsTo ? '<span class="tag good">Editable</span>' : '<span class="tag risk">Bloqueada</span>')}</div></div>
+        <div class="result-row"><div class="result-label">Validación</div><div class="result-value">${belongs ? '<span class="tag good">Pertenece al asociado seleccionado</span>' : '<span class="tag risk">No pertenece al asociado seleccionado; no se permite actualizar</span>'}</div></div>
+        <div class="result-row"><div class="result-label">Vendida</div><div class="result-value">${soldText} </div></div>
         <div class="result-row"><div class="result-label">Pagada</div><div class="result-value">${paidText}</div></div>
         <div class="result-row"><div class="result-label">Comprador</div><div class="result-value">${escapeHtml(data.buyer || '—')}</div></div>
         <div class="result-row"><div class="result-label">Cédula</div><div class="result-value mono">${escapeHtml(data.cedula || '—')}</div></div>
@@ -309,7 +309,7 @@
       soldCheck.disabled = soldMarked || !belongs;
       paidCheck.disabled = paidMarked || !belongs;
       [buyerInput, cedulaInput, phoneInput].forEach((element) => { element.disabled = !editableBuyer; });
-      saveBtn.disabled = !belongs;
+      saveBtn.disabled = !belongs || paidMarked;
       resetBtn.disabled = !belongs;
 
       state.current = { row: data.row, numbers: numbers.map(Number), associate, sold: soldMarked ? 'X' : '', paid: paidMarked ? 'X' : '', buyer: buyerInput.value, cedula: cedulaInput.value, phone: phoneInput.value };
@@ -378,10 +378,10 @@
     document.addEventListener('DOMContentLoaded', () => {
       const urlInput = $('#appsScriptUrl');
       urlInput.value = APPS_SCRIPT_URL;
-      $('#saveUrl').addEventListener('click', () => {
+      /*$('#saveUrl').addEventListener('click', () => {
         localStorage.setItem('rifaAppsScriptUrl', urlInput.value.trim());
         location.reload();
-      });
+      });*/
       $('#reloadData').addEventListener('click', loadAssociates);
       $('#associateSelect').addEventListener('change', () => {
         state.selectedAssociate = $('#associateSelect').value;
