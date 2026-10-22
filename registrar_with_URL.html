@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro de Boletas · RIFA 2026</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: #0d1b2d;
+      --ink: #edf5ff;
+      --muted: #9eb1c8;
+      --quiet: #6f829c;
+      --line: rgba(176, 205, 235, .16);
+      --cyan: #64e2f4;
+      --green: #74dfa7;
+      --amber: #ffc56b;
+      --red: #ff7d7d;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: radial-gradient(circle at 86% 0%, rgba(46,104,160,.16), transparent 34rem), radial-gradient(circle at 0% 40%, rgba(28,68,112,.13), transparent 32rem), #07111f; color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.5; }
+    .page { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 60px; }
+    .eyebrow { color: var(--cyan); font: 700 11px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .16em; text-transform: uppercase; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .muted { color: var(--muted); }
+    .quiet { color: var(--quiet); }
+    header { padding: 8px 0 24px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; gap: 14px; align-items: center; }
+    .mark { position: relative; width: 40px; height: 40px; border: 1px solid rgba(100,226,244,.7); border-radius: 50%; box-shadow: 0 0 26px rgba(100,226,244,.12); }
+    .mark::before, .mark::after { content: ""; position: absolute; inset: 8px -8px; border: 1px solid rgba(255,197,107,.72); border-radius: 50%; }
+    .mark::after { inset: -7px 12px; border-color: rgba(169,139,255,.55); }
+    .brand strong { display: block; margin-top: 4px; font-size: 16px; letter-spacing: .16em; }
+    h1 { max-width: 820px; margin: 34px 0 10px; font-size: clamp(34px, 5vw, 58px); line-height: 1; letter-spacing: -.05em; font-weight: 600; }
+    h1 span { color: var(--amber); }
+    .lead { max-width: 820px; margin: 0; color: var(--muted); font-size: 15px; }
+    .rule { height: 1px; margin: 26px 0 0; background: linear-gradient(90deg, var(--cyan), transparent); opacity: .6; }
+    section { margin-top: 30px; }
+    .section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin-bottom: 12px; }
+    h2 { margin: 0; font-size: 20px; letter-spacing: -.03em; }
+    h3 { margin: 0 0 8px; font-size: 14px; }
+    .kicker { color: var(--quiet); font: 600 10px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .13em; text-transform: uppercase; }
+    .panel { padding: 20px; border: 1px solid var(--line); border-radius: 5px; background: linear-gradient(145deg, rgba(16,35,58,.9), rgba(9,21,37,.9)); box-shadow: 0 22px 60px rgba(0,0,0,.25); }
+    .panel p { margin: 0; color: var(--muted); font-size: 13px; }
+    .panel p + p { margin-top: 8px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+    .control-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+    .field { display: grid; gap: 6px; min-width: 0; flex: 1 1 260px; }
+    label { color: var(--muted); font: 600 10px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    input, select, button { font: inherit; }
+    input, select { width: 100%; min-height: 40px; padding: 0 12px; border: 1px solid rgba(124,176,205,.22); border-radius: 4px; background: #0a1b2d; color: var(--ink); outline: none; }
+    input:focus, select:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(100,226,244,.12); }
+    button { min-height: 40px; padding: 0 16px; border: 1px solid rgba(124,176,205,.22); border-radius: 4px; background: rgba(12,29,47,.62); color: var(--ink); cursor: pointer; transition: border-color .16s ease, background .16s ease, color .16s ease; }
+    button:hover { border-color: rgba(101,230,255,.72); color: var(--cyan); }
+    button.primary { background: linear-gradient(110deg, rgba(38,113,135,.78), rgba(21,65,88,.86)); color: #f0fbff; border-color: rgba(101,230,255,.5); }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    .status { margin-top: 12px; padding: 12px 14px; border-radius: 4px; border: 1px solid var(--line); background: rgba(13,27,45,.72); color: var(--muted); font-size: 13px; }
+    .status.ok { border-color: rgba(116,223,167,.35); color: #bfebd4; }
+    .status.warn { border-color: rgba(255,197,107,.35); color: #f0d8a8; }
+    .status.error { border-color: rgba(255,125,125,.35); color: #f0b8b8; }
+    .result { display: grid; gap: 10px; margin-top: 14px; }
+    .result-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(176,205,235,.1); }
+    .result-row:last-child { border-bottom: 0; }
+    .result-label { color: var(--quiet); font: 600 10px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .result-value { color: var(--ink); font-size: 14px; word-break: break-word; }
+    .result-value.mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .numbers { display: flex; gap: 8px; flex-wrap: wrap; }
+    .number-pill { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; height: 34px; padding: 0 10px; border: 1px solid rgba(100,226,244,.35); border-radius: 3px; background: rgba(100,226,244,.08); color: var(--cyan); font: 700 15px ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px; }
+    .form-grid .full { grid-column: 1 / -1; }
+    .check-row { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; color: var(--ink); text-transform: none; letter-spacing: 0; font: 500 13px inherit; }
+    .check-row input { width: 18px; height: 18px; min-height: 18px; accent-color: var(--cyan); }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .log { max-height: 180px; overflow: auto; border: 1px solid var(--line); border-radius: 4px; background: rgba(5,13,25,.7); padding: 10px; font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; color: #b8c9df; }
+    .log div { margin: 0 0 6px; }
+    .log .ok { color: var(--green); }
+    .log .warn { color: var(--amber); }
+    .log .error { color: var(--red); }
+    .tag { display: inline-block; padding: 3px 6px; border-radius: 3px; font: 700 9px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .06em; text-transform: uppercase; }
+    .tag.good { color: var(--green); background: rgba(116,223,167,.1); }
+    .tag.warn { color: var(--amber); background: rgba(255,197,107,.1); }
+    .tag.risk { color: var(--red); background: rgba(255,125,125,.1); }
+    footer { margin-top: 34px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--quiet); font-size: 11px; }
+    footer p { margin: 4px 0; }
+    @media (max-width: 760px) { .grid, .form-grid { grid-template-columns: 1fr; } .result-row { grid-template-columns: 1fr; gap: 4px; } .control-row { flex-direction: column; align-items: stretch; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div class="brand">
+        <div class="mark" aria-hidden="true"></div>
+        <div>
+          <div class="eyebrow">RIFA 2026 · Registro de boletas</div>
+          <strong>Fondo Socios RIFA / BOLETAS</strong>
+        </div>
+      </div>
+      <h1>Registro de Venta de boletas<br /></h1>
+      <p class="lead">Consulta y actualiza boletas mediante una Web App.</p>
+      <div class="rule"></div>
+    </header>
+
+    <section>
+      <div class="section-title"><h2>1. Conexión</h2><div class="kicker">URL de Apps Script</div></div>
+      <div class="panel">
+        <div class="control-row">
+          <div class="field">
+            <label for="appsScriptUrl">URL de la Web App</label>
+            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec" hidden />
+            
+          </div>
+          <button id="saveUrl" type="button">Guardar URL</button>
+          <button id="reloadData" class="primary" type="button">Cargar datos</button>
+        </div>
+        <!--p class="quiet" style="margin-top:10px;font-size:12px">Pegue aquí la URL publicada de su Web App de Google Apps Script. La URL se guarda en el navegador.</p-->
+        <div id="connectionStatus" class="status warn">Sin conexión configurada.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title"><h2>2. Consultar boleta</h2><div class="kicker">Búsqueda por número</div></div>
+      <div class="panel">
+        <div class="control-row">
+          <div class="field">
+            <label for="associateSelect">Asociado</label>
+            <select id="associateSelect" disabled>
+              <option value="">Primero cargue los datos</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="searchNumber">Número de boleta o número asignado</label>
+            <input id="searchNumber" type="number" min="0" max="999" placeholder="Ejemplo: 188" disabled />
+          </div>
+          <button id="searchBtn" class="primary" type="button" disabled>Buscar</button>
+          <button id="clearBtn" type="button" disabled>Limpiar</button>
+        </div>
+        <div id="searchStatus" class="status" style="display:none"></div>
+        <div id="result" class="result" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title"><h2>3. Actualizar información</h2><div class="kicker">Solo si la boleta no está vendida</div></div>
+      <div class="panel">
+        <form id="editForm">
+          <div class="form-grid">
+            <div class="field">
+              <label for="sold">Vendida</label>
+              <label class="check-row"><input id="sold" type="checkbox" /> Marcar como vendida</label>
+            </div>
+            <div class="field">
+              <label for="paid">Pagada</label>
+              <label class="check-row"><input id="paid" type="checkbox" /> Marcar como pagada</label>
+            </div>
+            <div class="field full">
+              <label for="buyer">Nombre del comprador</label>
+              <input id="buyer" type="text" placeholder="Nombre completo" />
+            </div>
+            <div class="field">
+              <label for="cedula">Cédula</label>
+              <input id="cedula" type="text" placeholder="Documento" />
+            </div>
+            <div class="field">
+              <label for="phone">Teléfono</label>
+              <input id="phone" type="tel" placeholder="Celular" />
+            </div>
+          </div>
+          <div class="actions">
+            <button id="saveChanges" class="primary" type="button" disabled>Guardar cambios</button>
+            <button id="resetChanges" type="button" disabled>Descartar</button>
+          </div>
+        </form>
+        <p class="quiet" style="margin-top:12px;font-size:12px">Los cambios se envían a Google Sheets. La hoja <b>Números_000-999</b> no se modifica; el nombre del socio se mantiene por fórmula o por la lógica del backend.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title"><h2>4. Actividad</h2><div class="kicker">Registro de operaciones</div></div>
+      <div class="panel">
+        <div id="log" class="log"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p><b>Fuente:</b> Google Sheet vinculada a la Web App de Apps Script.</p>
+      <p>Publique esta página en GitHub Pages, Netlify, Vercel o Cloudflare Pages. Configure la URL de Apps Script antes de usarla.</p>
+    </footer>
+  </main>
+
+  <script>
+    const APPS_SCRIPT_URL = localStorage.getItem('rifaAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec';
+    //const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec';
+    const state = {
+      associates: [],
+      selectedAssociate: '',
+      current: null,
+      saved: null,
+      isRendering: false
+    };
+
+    const $ = (selector) => document.querySelector(selector);
+    const logContainer = $('#log');
+
+    function addLog(message, type) {
+      const line = document.createElement('div');
+      line.className = type || '';
+      line.textContent = new Date().toLocaleTimeString('es-CO') + ' · ' + message;
+      logContainer.prepend(line);
+    }
+
+    function setStatus(element, message, type) {
+      element.textContent = message;
+      element.className = 'status ' + (type || '');
+      element.style.display = message ? 'block' : 'none';
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function normalizeNumber(value) {
+      if (value === null || value === undefined || value === '') return null;
+      const number = Number(String(value).trim());
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function isMarked(value) {
+      const text = String(value === null || value === undefined ? '' : value).trim();
+      if (!text) return false;
+      const lower = text.toLowerCase();
+      if (lower === 'x' || lower === 's' || lower === 'si' || lower === 'sí' || lower === 'yes') return true;
+      const number = Number(text);
+      return Number.isFinite(number) && number !== 0;
+    }
+
+    function apiUrl(params) {
+      const url = new URL(APPS_SCRIPT_URL);
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') url.searchParams.set(key, value);
+      });
+      return url.toString();
+    }
+
+    async function loadAssociates() {
+      const connectionStatus = $('#connectionStatus');
+      try {
+        const response = await fetch(apiUrl({ action: 'associates' }));
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+        if (!data.associates || !Array.isArray(data.associates)) throw new Error('Respuesta inválida');
+        state.associates = data.associates;
+        const select = $('#associateSelect');
+        select.innerHTML = '<option value="">Seleccione un asociado para habilitar la consulta</option>';
+        data.associates.forEach((name) => {
+          const option = document.createElement('option');
+          option.value = name;
+          option.textContent = name;
+          select.appendChild(option);
+        });
+        select.disabled = false;
+        $('#searchNumber').disabled = false;
+        $('#searchBtn').disabled = false;
+        $('#clearBtn').disabled = false;
+        setStatus(connectionStatus, 'Datos cargados. Asociados disponibles: ' + data.associates.length, 'ok');
+        addLog('Datos cargados desde Google Sheets.', 'ok');
+      } catch (error) {
+        setStatus(connectionStatus, 'No se pudieron cargar los datos. Verifique la URL de Apps Script. Detalle: ' + error.message, 'error');
+        addLog('Error al cargar datos: ' + error.message, 'error');
+      }
+    }
+
+    function renderResult(data) {
+      const numbers = (data.numbers || []).map((n) => String(n).padStart(3, '0'));
+      const associate = data.associate || 'Sin asignar';
+      const belongs = !state.selectedAssociate || associate === state.selectedAssociate;
+      const soldMarked = isMarked(data.sold);
+      const paidMarked = isMarked(data.paid);
+      const soldText = soldMarked ? 'Si' : 'No';
+      const paidText = paidMarked ? 'Si' : 'No';
+      const result = $('#result');
+      result.innerHTML = `
+        <div class="result-row"><div class="result-label">Fila en Excel</div><div class="result-value mono">${data.row || '—'}</div></div>
+        <div class="result-row"><div class="result-label">Asociado</div><div class="result-value">${escapeHtml(associate)} ${belongsTo ? '' : '<span class="tag risk">No corresponde</span>'}</div></div>
+        <div class="result-row"><div class="result-label">Números</div><div class="result-value"><div class="numbers">${numbers.map((n) => `<span class="number-pill">${n}</span>`).join('')}</div></div></div>
+        <div class="result-row"><div class="result-label">Validación</div><div class="result-value">${belongsTo ? '<span class="tag good">Pertenece al asociado seleccionado</span>' : '<span class="tag risk">No pertenece al asociado seleccionado; no se permite actualizar</span>'}</div></div>
+        <div class="result-row"><div class="result-label">Vendida</div><div class="result-value">${soldText} ${soldMarked ? '<span class="tag warn">No editable</span>' : (belongsTo ? '<span class="tag good">Editable</span>' : '<span class="tag risk">Bloqueada</span>')}</div></div>
+        <div class="result-row"><div class="result-label">Pagada</div><div class="result-value">${paidText}</div></div>
+        <div class="result-row"><div class="result-label">Comprador</div><div class="result-value">${escapeHtml(data.buyer || '—')}</div></div>
+        <div class="result-row"><div class="result-label">Cédula</div><div class="result-value mono">${escapeHtml(data.cedula || '—')}</div></div>
+        <div class="result-row"><div class="result-label">Teléfono</div><div class="result-value mono">${escapeHtml(data.phone || '—')}</div></div>
+        <div class="result-row"><div class="result-label">Valor boleta</div><div class="result-value mono">${escapeHtml(data.value || '—')}</div></div>
+      `;
+
+      const soldCheck = $('#sold');
+      const paidCheck = $('#paid');
+      const buyerInput = $('#buyer');
+      const cedulaInput = $('#cedula');
+      const phoneInput = $('#phone');
+      const saveBtn = $('#saveChanges');
+      const resetBtn = $('#resetChanges');
+
+      state.isRendering = true;
+      soldCheck.checked = soldMarked;
+      paidCheck.checked = paidMarked;
+      buyerInput.value = data.buyer || '';
+      cedulaInput.value = data.cedula || '';
+      phoneInput.value = data.phone || '';
+
+      const editableBuyer = !soldMarked && belongs;
+      soldCheck.disabled = soldMarked || !belongs;
+      paidCheck.disabled = paidMarked || !belongs;
+      [buyerInput, cedulaInput, phoneInput].forEach((element) => { element.disabled = !editableBuyer; });
+      saveBtn.disabled = !belongs;
+      resetBtn.disabled = !belongs;
+
+      state.current = { row: data.row, numbers: numbers.map(Number), associate, sold: soldMarked ? 'X' : '', paid: paidMarked ? 'X' : '', buyer: buyerInput.value, cedula: cedulaInput.value, phone: phoneInput.value };
+      state.saved = { ...state.current };
+      state.isRendering = false;
+      setStatus($('#searchStatus'), 'Boleta encontrada en la fila ' + data.row + '.', 'ok');
+    }
+
+    function collectChanges() {
+      if (!state.current) return null;
+      const buyer = $('#buyer').value.trim();
+      const cedula = $('#cedula').value.trim();
+      const phone = $('#phone').value.trim();
+      const hasBuyerData = Boolean(buyer || cedula || phone);
+      return {
+        sold: (hasBuyerData || $('#sold').checked) ? 'X' : '',
+        paid: $('#paid').checked ? 'X' : '',
+        buyer,
+        cedula,
+        phone
+      };
+    }
+
+    async function searchBoleta() {
+      if (!state.associates.length) { setStatus($('#searchStatus'), 'Primero cargue los datos.', 'warn'); return; }
+      const number = normalizeNumber($('#searchNumber').value);
+      if (number === null) { setStatus($('#searchStatus'), 'Ingrese un número válido entre 0 y 999.', 'warn'); return; }
+      try {
+        const response = await fetch(apiUrl({ action: 'search', number }));
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+        if (!data || !data.result) { setStatus($('#searchStatus'), 'No se encontró una boleta que contenga el número ' + String(number).padStart(3, '0') + '.', 'error'); $('#result').innerHTML = ''; state.current = null; return; }
+        renderResult(data.result);
+      } catch (error) {
+        setStatus($('#searchStatus'), 'Error al consultar: ' + error.message, 'error');
+        addLog('Error al consultar: ' + error.message, 'error');
+      }
+    }
+
+    async function saveChanges() {
+      if (!state.current) return;
+      const associate = state.current.associate;
+      if (state.selectedAssociate && associate !== state.selectedAssociate) {
+        setStatus($('#fileStatus'), 'La boleta no pertenece al asociado seleccionado. No se permite actualizar.', 'error');
+        addLog('Actualización bloqueada: la boleta pertenece a ' + (associate || 'otro asociado') + '.', 'error');
+        return;
+      }
+      const changes = collectChanges();
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({ row: state.current.row, numbers: state.current.numbers, selectedAssociate: state.selectedAssociate, ...changes }),
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+        if (!data.ok) throw new Error(data.error || 'No se pudo actualizar');
+        addLog('Boleta fila ' + state.current.row + ' actualizada en Google Sheets.', 'ok');
+        await searchBoleta();
+      } catch (error) {
+        setStatus($('#fileStatus'), 'No se pudo guardar: ' + error.message, 'error');
+        addLog('Error al guardar: ' + error.message, 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlInput = $('#appsScriptUrl');
+      urlInput.value = APPS_SCRIPT_URL;
+      $('#saveUrl').addEventListener('click', () => {
+        localStorage.setItem('rifaAppsScriptUrl', urlInput.value.trim());
+        location.reload();
+      });
+      $('#reloadData').addEventListener('click', loadAssociates);
+      $('#associateSelect').addEventListener('change', () => {
+        state.selectedAssociate = $('#associateSelect').value;
+        const show = !!state.selectedAssociate;
+        $('#searchNumber').disabled = !show;
+        $('#searchBtn').disabled = !show;
+        $('#clearBtn').disabled = !show;
+        if (show) setStatus($('#searchStatus'), 'Asociado seleccionado: ' + state.selectedAssociate + '. Ahora puede consultar boletas.', 'ok');
+        else setStatus($('#searchStatus'), '', '');
+      });
+      $('#searchBtn').addEventListener('click', searchBoleta);
+      $('#clearBtn').addEventListener('click', () => {
+        $('#searchNumber').value = '';
+        $('#result').innerHTML = '';
+        state.current = null;
+        state.saved = null;
+        setStatus($('#searchStatus'), '', '');
+      });
+      $('#saveChanges').addEventListener('click', saveChanges);
+      $('#resetChanges').addEventListener('click', () => {
+        if (!state.saved) return;
+        $('#sold').checked = Boolean(state.saved.sold);
+        $('#paid').checked = Boolean(state.saved.paid);
+        $('#buyer').value = state.saved.buyer;
+        $('#cedula').value = state.saved.cedula;
+        $('#phone').value = state.saved.phone;
+        addLog('Cambios descartados.', 'warn');
+      });
+      $('#paid').addEventListener('change', () => {
+        if ($('#paid').checked) $('#sold').checked = true;
+      });
+      loadAssociates();
+    });
+  </script>
+</body>
+</html>

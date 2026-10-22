@@ -105,7 +105,7 @@
         <div class="control-row">
           <div class="field">
             <!--label for="appsScriptUrl">URL de la Web App</label-->
-            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec" readonly hidden="true" />
+            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec" hidden />
             
           </div>
           <!--button id="saveUrl" type="button">Guardar URL</button-->
@@ -187,8 +187,8 @@
   </main>
 
   <script>
-    //const APPS_SCRIPT_URL = localStorage.getItem('rifaAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec';
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec';
+    const APPS_SCRIPT_URL = localStorage.getItem('rifaAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec';
+    //const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVtyEVjJIChpRnQtvfB0mFLmeXfSj7FWgqwFPNeuSt5kPEYRP0qvygN1RBkNCVFbKl/exec';
     const state = {
       associates: [],
       selectedAssociate: '',
