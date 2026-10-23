@@ -7,7 +7,7 @@ Prueba de Registro de Boletas en HTML y Google Docs
 
 1. Cree un repositorio nuevo en GitHub, por ejemplo `rifa-boletas-admin`.
 2. Copie en el repositorio:
-   - `Administrar_Boletas_GoogleSheets.html`
+   - `admin-boletas-comite.html`
    - opcionalmente renombre el archivo a `index.html`
 3. Edite la constante:
 
@@ -22,7 +22,7 @@ Reemplace `ID_DEPLOYMENT` por la URL de su Web App de Google Apps Script.
 
 1. Abra el Google Sheet vinculado a la rifa.
 2. Vaya a **Extensiones > Apps Script**.
-3. Pegue el contenido de `GoogleAppsScript_Code.gs`.
+3. Pegue el contenido de `GoogleAppsScript_Code_Comite.gs`.
 4. Guarde el proyecto.
 5. Haga clic en **Implementar > Nueva implementación**.
 6. Tipo: **Aplicación web**.

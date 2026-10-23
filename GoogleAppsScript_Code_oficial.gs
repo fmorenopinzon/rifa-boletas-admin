@@ -5,6 +5,7 @@
 
 const BOLETAS_SHEET = 'Boletas';
 const NUMBERS_SHEET = 'Números_000-999';
+const REG_X_FECHAS_SHEET = 'REGISTRO_X_FECHAS';
 
 function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || '';
@@ -24,6 +25,9 @@ function doGet(e) {
     if (action === 'totals') {
       return json(getTotals());
     }
+    if (action === 'dailyTotals') {
+      return json({ dailyTotals: getDailyTotals() });
+    }
     return json({ ok: false, error: 'Acción no reconocida.' });
   } catch (error) {
     return json({ ok: false, error: String(error && error.message ? error.message : error) });
@@ -38,8 +42,7 @@ function doPost(e) {
     }
     if (payload.action === 'updateBulk') {
       const rows = Array.isArray(payload.rows) ? payload.rows : [];
-      const result = markBoletas(rows);
-      return json(result);
+      return json(markBoletas(rows));
     }
     return json({ ok: false, error: 'Acción no reconocida.' });
   } catch (error) {
@@ -61,6 +64,13 @@ function getBoletasSheet() {
   if (!sheet) throw new Error('No existe la hoja Boletas.');
   return sheet;
 }
+
+function getRegistryByDateSheet() {
+  const sheetByDate = getSpreadsheet().getSheetByName(REG_X_FECHAS_SHEET);
+  if (!sheetByDate) throw new Error('No existe la hoja de Registro Por Fecha.');
+  return sheetByDate;
+}
+
 
 function getAssociates() {
   const sheet = getBoletasSheet();
@@ -96,7 +106,7 @@ function searchBoleta(number) {
         sold: row[6],
         deliveryDate: row[8],
         valuePaid: row[9],
-        boletaValue: sheet.getRange('N1').getValue() || 50000
+        boletaValue: getBoletaValue(sheet)
       };
     }
   }
@@ -128,15 +138,21 @@ function getAssociateBoletas(associate) {
 function markBoleta(rowNumber) {
   const sheet = getBoletasSheet();
   const row = Number(rowNumber);
+  const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
   if (!Number.isInteger(row) || row < 2 || row > sheet.getLastRow()) {
     return { ok: false, error: 'Fila inválida.' };
   }
 
   const alreadyMarked = String(sheet.getRange(row, 7).getValue() || '').trim() !== '';
   if (!alreadyMarked) {
-    sheet.getRange(row, 7).setValue('x');          // G: Vendida/Pagada
-    sheet.getRange(row, 9).setValue(new Date());   // I: Fecha Entrega
+    sheet.getRange(row, 7).setValue('x');      // G: Vendida/Pagada
+    sheet.getRange(row, 9).setValue(today);   // I: Fecha Entrega (Actual)
   }
+
+  //const sheetByDate = getRegistryByDateSheet();
+  //ensureDailyTotalRow(sheetByDate.getRange(row, 2).getValue() || today);
+ 
+  ensureDailyTotalRow(today);
   return { ok: true, marked: true, alreadyMarked };
 }
 
@@ -163,6 +179,9 @@ function markBoletas(rows) {
     markedRows.push(row);
   });
 
+  if (markedRows.length > 0) {
+    ensureDailyTotalRow(today);
+  }
   return { ok: true, marked: markedRows.length, markedRows, skippedRows };
 }
 
@@ -181,7 +200,7 @@ function getTotals() {
     });
   }
 
-  const boletaValue = Number(sheet.getRange('N1').getValue() || 50000);
+  const boletaValue = getBoletaValue(sheet);
   const totalPaid = Number(sheet.getRange('G255').getValue() || 0);
 
   return {
@@ -190,6 +209,63 @@ function getTotals() {
     totalPaid,
     boletaValue
   };
+}
+
+function getBoletaValue(sheet) {
+  const n1 = Number(sheet.getRange('N1').getValue());
+  if (Number.isFinite(n1) && n1 > 0) return n1;
+  const o1 = Number(sheet.getRange('O1').getValue());
+  if (Number.isFinite(o1) && o1 > 0) return o1;
+  return 50000;
+}
+
+function ensureDailyTotalRow(date) {
+  const sheetByDate = getRegistryByDateSheet();
+  const startRow = 2;
+  let row = startRow;
+ 
+  while (row <= sheetByDate.getMaxRows()) {
+    const currentValue = sheetByDate.getRange(row, 1).getValue();
+    if (currentValue === '' || currentValue === null) break;
+    if (isSameDate(currentValue, Utilities.formatDate(date instanceof Date ? date : new Date(date), Session.getScriptTimeZone(), 'yyyy-MM-dd'))) {
+      sheetByDate.getRange(row, 1).setNumberFormat('yyyy-MM-dd');
+      sheetByDate.getRange(row, 2).setFormula('=COUNTIF(Boletas!$I$2:$I$252,B' + row + ')');
+      sheetByDate.getRange(row, 3).setFormula('=B' + row + ' * Boletas!$O$1');
+      return row;
+    }
+    row += 1;
+  }
+
+  if (row > sheetByDate.getMaxRows()) {
+    sheetByDate.insertRowsAfter(sheet.getMaxRows(), 100);
+  }
+
+  const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  sheetByDate.getRange(row, 1).setValue(today);
+  sheetByDate.getRange(row, 1).setNumberFormat('yyyy-MM-dd');
+  sheetByDate.getRange(row, 2).setFormula('=COUNTIF(Boletas!$I$2:$I$252,B' + row + ')');
+  sheetByDate.getRange(row, 3).setFormula('=B' + row + ' * Boletas!$O$1');
+
+  return row;
+}
+
+function getDailyTotals() {
+  const sheet = getRegistryByDateSheet();
+  const result = [];
+  let row = 260;
+
+  while (row <= sheet.getMaxRows()) {
+    const dateValue = sheet.getRange(row, 1).getValue();
+    if (dateValue === '' || dateValue === null) break;
+    const totalValue = sheet.getRange(row, 3).getValue();
+    result.push({
+      date: dateValue,
+      total: (typeof totalValue === 'number' && Number.isFinite(totalValue)) ? totalValue : Number(totalValue) || 0
+    });
+    row += 1;
+  }
+
+  return result;
 }
 
 function isSameDate(value, targetKey) {

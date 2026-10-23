@@ -37,7 +37,7 @@
     .quiet { color: var(--quiet); }
     header { padding: 8px 0 24px; border-bottom: 1px solid var(--line); }
     .brand { display: flex; gap: 14px; align-items: center; }
-    .mark { position: relative; width: 40px; height: 40px; border: 1px solid rgba(88,214,141,.7); border-radius: 50%; box-shadow: 0 0 26px rgba(88,214,141,.12); }
+    .mark { position: relative; width: 20px; height: 20px; border: 1px solid rgba(88,214,141,.7); border-radius: 50%; box-shadow: 0 0 26px rgba(88,214,141,.12); }
     .mark::before, .mark::after { content: ""; position: absolute; inset: 8px -8px; border: 1px solid rgba(255,197,107,.72); border-radius: 50%; }
     .mark::after { inset: -7px 12px; border-color: rgba(169,139,255,.55); }
     .brand strong { display: block; margin-top: 4px; font-size: 16px; letter-spacing: .16em; }
@@ -58,7 +58,7 @@
     .field { display: grid; gap: 6px; min-width: 0; flex: 1 1 260px; }
     label { color: var(--muted); font: 600 10px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
     input, select, button { font: inherit; }
-    input, select { width: 100%; min-height: 40px; padding: 0 12px; border: 1px solid rgba(124,176,205,.22); border-radius: 4px; background: #0a1b12; color: var(--ink); outline: none; }
+    input, select { width: 100%; min-height: 20px; padding: 0 12px; border: 1px solid rgba(124,176,205,.22); border-radius: 4px; background: #0a1b12; color: var(--ink); outline: none; }
     input:focus, select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(88,214,141,.12); }
     button { min-height: 40px; padding: 0 16px; border: 1px solid rgba(124,176,205,.22); border-radius: 4px; background: rgba(12,29,20,.62); color: var(--ink); cursor: pointer; transition: border-color .16s ease, background .16s ease, color .16s ease; }
     button:hover { border-color: rgba(88,214,141,.72); color: var(--green); }
@@ -91,9 +91,9 @@
     .tag.warn { color: var(--amber); background: rgba(255,197,107,.1); }
     .tag.risk { color: var(--red); background: rgba(255,125,125,.1); }
     .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 4px; background: rgba(5,13,10,.5); }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    th { padding: 9px 10px; color: var(--quiet); border-bottom: 1px solid var(--line); text-align: left; font: 600 9px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
-    td { padding: 10px; border-bottom: 1px solid rgba(176,205,235,.09); color: #dcf2e5; vertical-align: top; }
+    table { width: 100%; border-collapse: collapse; font-size: 18px; }
+    th { padding: 12px 10px; color: var(--quiet); border-bottom: 1px solid var(--line); text-align: left; font: 600 14px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    td { padding: 12px; border-bottom: 1px solid rgba(176,205,235,.09); color: #dcf2e5; vertical-align: top; }
     td.mono, th.mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }
     tr:last-child td { border-bottom: 0; }
     .total-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
@@ -121,7 +121,7 @@
     </header>
 
     <section>
-      <div class="section-title"><h2>1. Conexión</h2><div class="kicker">URL de Apps Script</div></div>
+      <div class="section-title"><h2>Conexión</h2><div class="kicker">URL de Apps Script</div></div>
       <div class="panel">
         <div class="control-row">
           <div class="field">
@@ -135,28 +135,17 @@
       </div>
     </section>
 
-    <section>
-      <div class="section-title"><h2>2. Asociado</h2><div class="kicker">Asociado que entrega / recibe</div></div>
-      <div class="panel">
-        <div class="field" style="max-width:420px">
-          <label for="associateSelect">Asociado</label>
-          <select id="associateSelect" disabled>
-            <option value="">Seleccione un asociado para habilitar operaciones</option>
-          </select>
-        </div>
-      </div>
-    </section>
 
-    <section>
-      <div class="section-title"><h2>3. Consultar por número de boleta</h2><div class="kicker">Datos de la boleta</div></div>
+    <section id="searchSection" style="display:none">
+      <div class="section-title"><h2>1. Consultar por número de boleta</h2><div class="kicker">Datos de la boleta</div></div>
       <div class="panel">
         <div class="control-row">
           <div class="field">
             <label for="searchNumber">Número de boleta o número asignado</label>
-            <input id="searchNumber" type="number" min="0" max="999" placeholder="Ejemplo: 188" disabled />
+            <input id="searchNumber" type="number" min="0" max="999" placeholder="Ejemplo: 188"  />
           </div>
-          <button id="searchBtn" class="primary" type="button" disabled>Buscar</button>
-          <button id="clearBtn" type="button" disabled>Limpiar</button>
+          <button id="searchBtn" class="primary" type="button" >Buscar</button>
+          <button id="clearBtn" type="button" >Limpiar</button>
         </div>
         <div id="searchStatus" class="status" style="display:none"></div>
         <div id="result" class="result" style="margin-top:14px"></div>
@@ -165,7 +154,7 @@
           <div class="form-grid">
             <div class="field">
               <label for="soldPaid">Vendida / Pagada</label>
-              <label class="check-row"><input id="soldPaid" type="checkbox" /> Marcar la boleta</label>
+              <label class="check-row"><input id="soldPaid" type="checkbox" /> Pagada?</label>
             </div>
             <div class="field">
               <label>Fecha de entrega</label>
@@ -180,12 +169,22 @@
     </section>
 
     <section>
-      <div class="section-title"><h2>4. Boletas por asociado</h2><div class="kicker">Registro Masivo por Asociado</div></div>
+      <div class="panel">
+        <div class="field" style="max-width:420px">
+          <label for="associateSelect">2. Asociado</label>
+          <select id="associateSelect" disabled>
+            <option value="">Seleccione un asociado para habilitar operaciones</option>
+          </select>
+        </div>
+    </section>
+
+    <section>
+      <div class="section-title"><h2>2.1. Registro de Boletas por asociado</h2><div class="kicker">Registro Masivo por Asociado</div></div>
       <div class="panel">
         <div class="control-row">
           <button id="loadAssociateBoletas" class="primary" type="button" disabled>Cargar boletas del asociado</button>
           <button id="saveAssociateBoletas" type="button" disabled>Guardar Registradas</button>
-          <button id="markAll" type="button" disabled>Marcar todas las pendientes</button>
+          <!--button id="markAll" type="button" disabled>Marcar todas las pendientes</button-->
         </div>
         <div id="associateStatus" class="status" style="display:none;margin-top:12px"></div>
         <div id="associateTable" class="table-wrap" style="margin-top:14px"></div>
@@ -193,7 +192,7 @@
     </section>
 
     <section>
-      <div class="section-title"><h2>5. Totales del comité</h2><div class="kicker">Consolidado Registro Boletas</div></div>
+      <div class="section-title"><h2>3. Totales de Registro</h2><div class="kicker">Consolidado Registro Boletas</div></div>
       <div class="panel">
         <div class="total-box">
           <div class="total-card"><span>Boletas registradas hoy</span><strong id="todayCount">0</strong></div>
@@ -201,11 +200,18 @@
           <div class="total-card"><span>Total recaudado</span><strong id="totalPaid">0</strong></div>
         </div>
         <p class="quiet" style="margin-top:12px;font-size:12px">La cantidad de boletas registradas corresponde a las marcadas con fecha de entrega igual a la fecha actual.</p>
+        <h3 style="margin-top:18px">Totales por fecha de registro</h3>
+        <div class="table-wrap" style="margin-top:10px">
+          <table>
+            <thead><tr><th>Fecha de registro</th><th class="mono">Total del día</th></tr></thead>
+            <tbody id="dailyTotalsBody"><tr><td colspan="2">Sin registros diarios.</td></tr></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
     <section>
-      <div class="section-title"><h2>6. Actividad</h2><div class="kicker">Registro de operaciones</div></div>
+      <div class="section-title"><h2>Actividad</h2><div class="kicker">Registro de operaciones</div></div>
       <div class="panel">
         <div id="log" class="log"></div>
       </div>
@@ -306,6 +312,10 @@
           select.appendChild(option);
         });
         select.disabled = false;
+        
+        const searchSection = document.getElementById('searchSection');
+        if (searchSection) searchSection.style.display = show ? '' : 'none';
+
         setStatus(connectionStatus, 'Datos cargados. Asociados disponibles: ' + data.associates.length, 'ok');
         addLog('Datos cargados desde Google Sheets.', 'ok');
         await loadTotals();
@@ -407,9 +417,10 @@
       }
       const rows = boletas.map((item) => {
         const marked = isMarked(item.sold);
-        const checkbox = marked ? 'Marcada' : `<input type="checkbox" class="associate-check" data-row="${item.row}" />`;
+        const checkbox = marked ? 'PAGADA' : `<input type="checkbox" class="associate-check" data-row="${item.row}" />`;
+        //<!--td class="mono">${(item.numbers || []).join(' · ')}</td-->
         return `<tr>
-          <td class="mono">${(item.numbers || []).join(' · ')}</td>
+          <td class="mono"> <div class="result-value"><div class="numbers">${numbers.map((n) => `<span class="number-pill">${n}</span>`).join('')}</div></div> <</td>
           <td>${marked ? 'Si' : 'No'}</td>
           <td class="mono">${escapeHtml(formatDate(item.deliveryDate))}</td>
           <td>${checkbox}</td>
@@ -417,7 +428,7 @@
       }).join('');
       container.innerHTML = `
         <table>
-          <thead><tr><th>Números</th><th>Vendida/Pagada</th><th>Fecha entrega</th><th>Marcar</th></tr></thead>
+          <thead><tr><th>Números</th><th>Vendida/Pagada</th><th>Fecha entrega</th><th>Registrar Pago</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       `;
@@ -448,12 +459,37 @@
       addLog('Todas las boletas pendientes marcadas.', 'ok');
     }
 
+    function renderDailyTotals(rows) {
+      const tbody = $('#dailyTotalsBody');
+      if (!tbody) return;
+      if (!Array.isArray(rows) || !rows.length) {
+        tbody.innerHTML = '<tr><td colspan="2">Sin registros diarios.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map((row) => `
+        <tr>
+          <td class="mono">${escapeHtml(formatDate(row.date))}</td>
+          <td class="mono">${escapeHtml(row.total === null || row.total === undefined || row.total === '' ? '—' : row.total)}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadDailyTotals() {
+      try {
+        const data = await apiGet({ action: 'dailyTotals' });
+        renderDailyTotals(data.dailyTotals || []);
+      } catch (error) {
+        addLog('No se pudieron cargar los totales por fecha: ' + error.message, 'warn');
+      }
+    }
+
     async function loadTotals() {
       try {
         const data = await apiGet({ action: 'totals' });
         $('#todayCount').textContent = data.todayCount ?? 0;
         $('#todayValue').textContent = data.todayValue ?? 0;
         $('#totalPaid').textContent = data.totalPaid ?? 0;
+        await loadDailyTotals();
       } catch (error) {
         addLog('No se pudieron cargar los totales: ' + error.message, 'warn');
       }
@@ -469,6 +505,10 @@
       $('#associateSelect').addEventListener('change', () => {
         const show = !!$('#associateSelect').value;
         $('#loadAssociateBoletas').disabled = !show;
+
+        /*const searchSection = document.getElementById('searchSection');
+        if (searchSection) searchSection.style.display = show ? '' : 'none';*/
+
       });
       $('#searchBtn').addEventListener('click', searchBoleta);
       $('#clearBtn').addEventListener('click', () => {
