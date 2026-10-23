@@ -185,6 +185,7 @@
           <button id="loadAssociateBoletas" class="primary" type="button" disabled>Cargar boletas del asociado</button>
           <button id="saveAssociateBoletas" type="button" disabled>Guardar Registradas</button>
           <!--button id="markAll" type="button" disabled>Marcar todas las pendientes</button-->
+          <label class="check-row"><input id="markAll" type="checkbox" /> Marcar todas las pendientes</label>
         </div>
         <div id="associateStatus" class="status" style="display:none;margin-top:12px"></div>
         <div id="associateTable" class="table-wrap" style="margin-top:14px"></div>
@@ -313,6 +314,9 @@
         });
         select.disabled = false;
         
+        state.selectedAssociate = $('#associateSelect').value;
+        
+        const show = !!state.selectedAssociate;
         const searchSection = document.getElementById('searchSection');
         if (searchSection) searchSection.style.display = show ? '' : 'none';
 
@@ -420,7 +424,7 @@
         const checkbox = marked ? 'PAGADA' : `<input type="checkbox" class="associate-check" data-row="${item.row}" />`;
         //<!--td class="mono">${(item.numbers || []).join(' · ')}</td-->
         return `<tr>
-          <td class="mono"> <div class="result-value"><div class="numbers">${numbers.map((n) => `<span class="number-pill">${n}</span>`).join('')}</div></div> <</td>
+          <td class="mono"> <div class="result-value"><div class="numbers">${item.numbers.map((n) => `<span class="number-pill">${n}</span>`).join('')}</div></div> </td>
           <td>${marked ? 'Si' : 'No'}</td>
           <td class="mono">${escapeHtml(formatDate(item.deliveryDate))}</td>
           <td>${checkbox}</td>
