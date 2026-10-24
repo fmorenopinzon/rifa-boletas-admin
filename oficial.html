@@ -141,9 +141,9 @@
         <div class="control-row">
           <div class="field">
             <!--label for="appsScriptUrl">URL de la Web App</label-->
-            <!--input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbzyvWDMszqdZLTYmP-PMtTbG0KIX4ToBsZLrPopYyhxDlKWjYDuUwbjCWv18ranx4F0eQ/exec" hidden/-->
+            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbx2orLYkSTcLL5iQ4z5Y_Jek3XxOgpPqtQIzTZ27TTMlHEUqvWFJrrXTipwXutmFHNsGQ/exec" hidden/>
             <!--input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbwpdkH6zYpWQoA_GOb3yZktwbszEy-mBRZUE0k2j7HeMQuezXRx1LNdZWf9r7c1Ac2BmA/exec" hidden/-->
-            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbywbsiBBNGwrZVqPLzw7Ybv1u8mHMlG5qLfusokVLdDUPgjj6yDemzt7GFpttKLbkUpfw/exec" hidden/>
+            <!--input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbywbsiBBNGwrZVqPLzw7Ybv1u8mHMlG5qLfusokVLdDUPgjj6yDemzt7GFpttKLbkUpfw/exec" hidden/-->
             
           </div>
           <button id="reloadData" type="button">Cargar datos</button>
@@ -200,10 +200,9 @@
       <div class="section-title"><h2>2.1. Registro de Boletas por asociado</h2><div class="kicker">Registro Masivo por Asociado</div></div>
       <div class="panel">
         <div class="control-row">
-         
+          <div class="field">
+          </div>         
           <button id="saveAssociateBoletas" class="primary" type="button" disabled>Guardar</button>
-          <!--button id="markAll" type="button" disabled>Marcar todas las pendientes</button-->
-         
         </div>
         <div id="associateStatus" class="status" style="display:none;margin-top:12px"></div>
         <div id="associateTable" class="table-wrap" style="margin-top:14px"></div>
@@ -259,7 +258,7 @@
   </main>
 
   <script>
-    const APPS_SCRIPT_URL = localStorage.getItem('comiteAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbywbsiBBNGwrZVqPLzw7Ybv1u8mHMlG5qLfusokVLdDUPgjj6yDemzt7GFpttKLbkUpfw/exec';
+    const APPS_SCRIPT_URL = localStorage.getItem('comiteAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbx2orLYkSTcLL5iQ4z5Y_Jek3XxOgpPqtQIzTZ27TTMlHEUqvWFJrrXTipwXutmFHNsGQ/exec';
     const state = {
       associates: [],
       selectedAssociate: '',
