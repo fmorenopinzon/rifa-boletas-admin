@@ -182,13 +182,17 @@
       <div class="section-title"><h2>2.1. Registro de Boletas por asociado</h2><div class="kicker">Registro Masivo por Asociado</div></div>
       <div class="panel">
         <div class="control-row">
-          <button id="loadAssociateBoletas" class="primary" type="button" disabled>Cargar boletas del asociado</button>
+         
           <button id="saveAssociateBoletas" type="button" disabled>Guardar Registradas</button>
           <!--button id="markAll" type="button" disabled>Marcar todas las pendientes</button-->
          
         </div>
         <div id="associateStatus" class="status" style="display:none;margin-top:12px"></div>
         <div id="associateTable" class="table-wrap" style="margin-top:14px"></div>
+        <br/>
+        <p>Se Cargan las boletas del asociado automáticamente cuando se selecciona otro. Se deja el botón en caso de que NO se haga automáticamente</p>
+        <button id="loadAssociateBoletas" class="primary" type="button" disabled>Cargar boletas del asociado</button>
+
       </div>
     </section>
 
@@ -396,6 +400,7 @@
       const status = $('#associateStatus');
       if (!associate) {
         setStatus(status, 'Seleccione un asociado.', 'warn');
+        clearAssociateTable();
         return;
       }
       try {
@@ -411,6 +416,7 @@
       }
     }
 
+ 
     function renderAssociateTable(boletas) {
       const container = $('#associateTable');
       if (!boletas.length) {
@@ -440,6 +446,20 @@
       const hasPending = boletas.some((item) => !isMarked(item.sold));
       $('#saveAssociateBoletas').disabled = false;
       $('#markAll').disabled = !hasPending;
+    }
+
+    function clearAssociateTable() {
+      const container = $('#associateTable');
+      container.innerHTML = `
+        <table>
+          <thead><tr><th>Números</th><th>Vendida/Pagada</th><th>Fecha entrega</th><th>Registrar Pago    <label class="check-row"><input id="markAll" type="checkbox" /> Marcar/desmarcar todas</label>  </th></tr></thead>
+          <tbody></tbody>
+        </table>
+      `;
+      $('#saveAssociateBoletas').disabled = true;
+      $('#markAll').disabled = true;
+      return;
+
     }
 
     async function saveAssociateBoletas() {
@@ -512,7 +532,10 @@
       $('#associateSelect').addEventListener('change', () => {
         const show = !!$('#associateSelect').value;
         $('#loadAssociateBoletas').disabled = !show;
-
+        $('#saveAssociateBoletas').disabled = !show;
+        
+        //Para que cargue automaticamente cuando cambie el asociado
+        loadAssociateBoletas();
         /*const searchSection = document.getElementById('searchSection');
         if (searchSection) searchSection.style.display = show ? '' : 'none';*/
 
