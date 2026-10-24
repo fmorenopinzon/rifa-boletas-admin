@@ -153,7 +153,7 @@
         <div id="singleUpdate" style="display:none;margin-top:16px">
           <div class="form-grid">
             <div class="field">
-              <label for="soldPaid">Vendida / Pagada</label>
+              <label for="soldPaid">Registrada / Pagada</label>
               <label class="check-row"><input id="soldPaid" type="checkbox" /> Pagada?</label>
             </div>
             <div class="field">
@@ -367,7 +367,7 @@
       result.innerHTML = `
         <div class="result-row"><div class="result-label">Asociado</div><div class="result-value">${escapeHtml(associate)}</div></div>
         <div class="result-row"><div class="result-label">Números</div><div class="result-value"><div class="numbers">${numbers.map((n) => `<span class="number-pill">${n}</span>`).join('')}</div></div></div>
-        <div class="result-row"><div class="result-label">Vendida/Pagada</div><div class="result-value">${marked ? 'Si' : 'No'}</div></div>
+        <div class="result-row"><div class="result-label">Registrada/Pagada</div><div class="result-value">${marked ? 'Si' : 'No'}</div></div>
         <div class="result-row"><div class="result-label">Fecha entrega</div><div class="result-value mono">${escapeHtml(formatDate(data.deliveryDate))}</div></div>
         <div class="result-row"><div class="result-label">Valor pago</div><div class="result-value mono">${escapeHtml(data.valuePaid === null || data.valuePaid === undefined || data.valuePaid === '' ? '—' : data.valuePaid)}</div></div>
       `;
@@ -387,13 +387,13 @@
       const row = state.current.row;
       const check = $('#soldPaid');
       if (!check.checked) {
-        setStatus($('#searchStatus'), 'Marque la casilla para registrar la boleta como vendida/pagada.', 'warn');
+        setStatus($('#searchStatus'), 'Marque la casilla para registrar la boleta como Entregada/pagada.', 'warn');
         return;
       }
       try {
         const response = await apiPost({ action: 'update', row, mark: true });
         if (!response.ok) throw new Error(response.error || 'No se pudo actualizar');
-        addLog('Boleta fila ' + row + ' registrada como vendida/pagada.', 'ok');
+        addLog('Boleta fila ' + row + ' Guardada como Registrada/pagada.', 'ok');
         await searchBoleta();
         await loadTotals();
       } catch (error) {
@@ -445,7 +445,7 @@
       }).join('');
       container.innerHTML = `
         <table>
-          <thead><tr><th>Números</th><th>Vendida/Pagada</th><th>Fecha entrega</th><th>Registrar Pago    <label class="check-row"><input id="markAll" type="checkbox" /> Marcar/desmarcar todas</label>  </th></tr></thead>
+          <thead><tr><th>Números</th><th>Registrada/Pagada</th><th>Fecha entrega</th><th>Registrar Pago    <label class="check-row"><input id="markAll" type="checkbox" /> Marcar/desmarcar todas</label>  </th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       `;
