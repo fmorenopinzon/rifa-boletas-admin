@@ -44,6 +44,20 @@
     h1 { max-width: 860px; margin: 34px 0 10px; font-size: clamp(34px, 5vw, 58px); line-height: 1; letter-spacing: -.05em; font-weight: 600; }
     h1 span { color: var(--green); }
     .lead { max-width: 860px; margin: 0; color: var(--muted); font-size: 15px; }
+    .report-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      color: var(--green);
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid rgba(88,214,141,.45);
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: rgba(88,214,141,.08);
+    }
+    .report-link:hover { background: rgba(88,214,141,.12); }
     .rule { height: 1px; margin: 26px 0 0; background: linear-gradient(90deg, var(--green), transparent); opacity: .6; }
     section { margin-top: 30px; }
     .section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin-bottom: 12px; }
@@ -117,6 +131,7 @@
       </div>
       <h1>Oficialización de boletas<br /><span>Pagadas y entregadas.</span></h1>
       <p class="lead">Gestione la entrega de boletas al comité: consulte por número o por asociado, marque boletas como vendidas/pagadas y registre automáticamente la fecha de entrega.</p>
+      
       <div class="rule"></div>
     </header>
 
@@ -126,8 +141,10 @@
         <div class="control-row">
           <div class="field">
             <!--label for="appsScriptUrl">URL de la Web App</label-->
-            <!--input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbz9kjDqTVtjzhe5vlnZb8w7D-zjeAXwADQIc8W5XcFfO0mepNLtqkrXaVShz-vZfa0k/exec" hidden/-->
-            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbzyvWDMszqdZLTYmP-PMtTbG0KIX4ToBsZLrPopYyhxDlKWjYDuUwbjCWv18ranx4F0eQ/exec" hidden/>
+            <!--input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbzyvWDMszqdZLTYmP-PMtTbG0KIX4ToBsZLrPopYyhxDlKWjYDuUwbjCWv18ranx4F0eQ/exec" hidden/-->
+            <!--input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbwpdkH6zYpWQoA_GOb3yZktwbszEy-mBRZUE0k2j7HeMQuezXRx1LNdZWf9r7c1Ac2BmA/exec" hidden/-->
+            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbywbsiBBNGwrZVqPLzw7Ybv1u8mHMlG5qLfusokVLdDUPgjj6yDemzt7GFpttKLbkUpfw/exec" hidden/>
+            
           </div>
           <button id="reloadData" type="button">Cargar datos</button>
         </div>
@@ -224,6 +241,11 @@
     </section>
 
     <section>
+      <div class="section-title"><h2>4.Reporte</h2><div class="kicker">Reporte de Boletas Entregadas y Recaudo</div></div>
+      <a id="paidReportLink" class="report-link" href="#" target="_blank" rel="noopener">Generar reporte HTML</a>
+    </section>
+
+    <section>
       <div class="section-title"><h2>Actividad</h2><div class="kicker">Registro de operaciones</div></div>
       <div class="panel">
         <div id="log" class="log"></div>
@@ -237,7 +259,7 @@
   </main>
 
   <script>
-    const APPS_SCRIPT_URL = localStorage.getItem('comiteAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbzyvWDMszqdZLTYmP-PMtTbG0KIX4ToBsZLrPopYyhxDlKWjYDuUwbjCWv18ranx4F0eQ/exec';
+    const APPS_SCRIPT_URL = localStorage.getItem('comiteAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbywbsiBBNGwrZVqPLzw7Ybv1u8mHMlG5qLfusokVLdDUPgjj6yDemzt7GFpttKLbkUpfw/exec';
     const state = {
       associates: [],
       selectedAssociate: '',
@@ -284,6 +306,12 @@
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) return String(value);
       return date.toLocaleDateString('es-CO', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    }
+
+    function formatCurrency(value) {
+      const number = Number(value);
+      if (!Number.isFinite(number)) return '0';
+      return number.toLocaleString('es-CO');
     }
 
     function apiUrl(params) {
@@ -511,6 +539,11 @@
       `).join('');
     }
 
+    function openPaidReport() {
+      const reportUrl = apiUrl({ action: 'paidReportHtml' });
+      window.open(reportUrl, '_blank', 'noopener,noreferrer');
+    }
+
     async function loadDailyTotals() {
       try {
         const data = await apiGet({ action: 'dailyTotals' });
@@ -524,13 +557,13 @@
       try {
         const data = await apiGet({ action: 'totals' });
 
-        $('#boletaValue').textContent = data.boletaValue ?? 0;
+        $('#boletaValue').textContent = '$ ' + formatCurrency(data.boletaValue ?? 0);
 
         $('#todayCount').textContent = data.todayCount ?? 0;
-        $('#todayValue').textContent = (data.todayValue ?? 0 ) ; 
+        $('#todayValue').textContent = '$ ' + formatCurrency(data.todayValue ?? 0);
 
-        $('#totalCount').textContent = (data.totalCount ?? 0 ) ;
-        $('#totalPaid').textContent = data.totalPaid ?? 0;
+        $('#totalCount').textContent = data.totalCount ?? 0;
+        $('#totalPaid').textContent = '$ ' + formatCurrency(data.totalPaid ?? 0);
         await loadDailyTotals();
       } catch (error) {
         addLog('No se pudieron cargar los totales: ' + error.message, 'warn');
@@ -565,6 +598,10 @@
       $('#saveSingle').addEventListener('click', saveSingleBoleta);
       $('#loadAssociateBoletas').addEventListener('click', loadAssociateBoletas);
       $('#saveAssociateBoletas').addEventListener('click', saveAssociateBoletas);
+      $('#paidReportLink').addEventListener('click', (event) => {
+        event.preventDefault();
+        openPaidReport();
+      });
       //$('#markAll').addEventListener('click', markAllPending);
       loadAssociates().then(loadTotals);
     });
