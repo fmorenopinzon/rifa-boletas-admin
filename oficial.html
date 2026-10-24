@@ -112,10 +112,10 @@
         <div class="mark" aria-hidden="true"></div>
         <div>
           <div class="eyebrow">Comité RIFA 2026 · Entrega oficial de boletas</div>
-          <strong>BOLETAS / COMITÉ</strong>
+          <strong>BOLETAS / FONDO SOCIOS MADELENA</strong>
         </div>
       </div>
-      <h1>Oficialización de boletas<br /><span>pagadas y entregadas.</span></h1>
+      <h1>Oficialización de boletas<br /><span>Pagadas y entregadas.</span></h1>
       <p class="lead">Gestione la entrega de boletas al comité: consulte por número o por asociado, marque boletas como vendidas/pagadas y registre automáticamente la fecha de entrega.</p>
       <div class="rule"></div>
     </header>
@@ -128,7 +128,7 @@
             <!--label for="appsScriptUrl">URL de la Web App</label-->
             <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbz9kjDqTVtjzhe5vlnZb8w7D-zjeAXwADQIc8W5XcFfO0mepNLtqkrXaVShz-vZfa0k/exec" hidden/>
           </div>
-          <button id="reloadData" class="primary" type="button">Cargar datos</button>
+          <button id="reloadData" type="button">Cargar datos</button>
         </div>
         <!--p class="quiet" style="margin-top:10px;font-size:12px">Pegue la URL publicada de la Web App. La página carga automáticamente los asociados y los totales.</p-->
         <div id="connectionStatus" class="status warn">Sin conexión configurada.</div>
@@ -183,7 +183,7 @@
       <div class="panel">
         <div class="control-row">
          
-          <button id="saveAssociateBoletas" type="button" disabled>Guardar Registradas</button>
+          <button id="saveAssociateBoletas" class="primary" type="button" disabled>Guardar</button>
           <!--button id="markAll" type="button" disabled>Marcar todas las pendientes</button-->
          
         </div>
@@ -191,7 +191,7 @@
         <div id="associateTable" class="table-wrap" style="margin-top:14px"></div>
         <br/>
         <p>Se Cargan las boletas del asociado automáticamente cuando se selecciona otro. Se deja el botón en caso de que NO se haga automáticamente</p>
-        <button id="loadAssociateBoletas" class="primary" type="button" disabled>Cargar boletas del asociado</button>
+        <button id="loadAssociateBoletas"  type="button" disabled>Cargar boletas del asociado</button>
 
       </div>
     </section>
@@ -200,18 +200,25 @@
       <div class="section-title"><h2>3. Totales de Registro</h2><div class="kicker">Consolidado Registro Boletas</div></div>
       <div class="panel">
         <div class="total-box">
-          <div class="total-card"><span>Boletas registradas hoy</span><strong id="todayCount">0</strong></div>
-          <div class="total-card"><span>Valor total hoy</span><strong id="todayValue">0</strong></div>
-          <div class="total-card"><span>Total recaudado</span><strong id="totalPaid">0</strong></div>
+          <div class="total-card"><span>Valor Boleta $</span><strong id="boletaValue">0</strong></div>
         </div>
+        <div class="total-box">
+          <div class="total-card"><span>Boletas registradas hoy</span><strong id="todayCount">0</strong></div>
+          <div class="total-card"><span>Valor total hoy $</span><strong id="todayValue">0</strong></div>
+        </div>
+        <div class="total-box">
+          <div class="total-card"><span>Cantidad Total Registradas</span><strong id="totalCount">0</strong></div>
+          <div class="total-card"><span>Total recaudado $</span><strong id="totalPaid">0</strong></div>
+        </div>
+
         <p class="quiet" style="margin-top:12px;font-size:12px">La cantidad de boletas registradas corresponde a las marcadas con fecha de entrega igual a la fecha actual.</p>
-        <h3 style="margin-top:18px">Totales por fecha de registro</h3>
+        <!--h3 style="margin-top:18px">Totales por fecha de registro</h3>
         <div class="table-wrap" style="margin-top:10px">
           <table>
             <thead><tr><th>Fecha de registro</th><th class="mono">Total del día</th></tr></thead>
             <tbody id="dailyTotalsBody"><tr><td colspan="2">Sin registros diarios.</td></tr></tbody>
           </table>
-        </div>
+        </div-->
       </div>
     </section>
 
@@ -496,6 +503,8 @@
       tbody.innerHTML = rows.map((row) => `
         <tr>
           <td class="mono">${escapeHtml(formatDate(row.date))}</td>
+           <td class="mono">${escapeHtml(row.todayCount === null || row.todayCount === undefined || row.todayCount === '' ? '—' : row.todayCount)}  </td>
+          <td class="mono">${escapeHtml(row.todayValue === null || row.todayValue === undefined || row.todayValue === '' ? '—' : row.todayValue)}  </td>
           <td class="mono">${escapeHtml(row.total === null || row.total === undefined || row.total === '' ? '—' : row.total)}</td>
         </tr>
       `).join('');
@@ -513,8 +522,13 @@
     async function loadTotals() {
       try {
         const data = await apiGet({ action: 'totals' });
+
+        $('#boletaValue').textContent = data.boletaValue ?? 0;
+
         $('#todayCount').textContent = data.todayCount ?? 0;
-        $('#todayValue').textContent = data.todayValue ?? 0;
+        $('#todayValue').textContent = (data.todayValue ?? 0 ) ; 
+
+        $('#totalCount').textContent = (data.totalCount ?? 0 ) ;
         $('#totalPaid').textContent = data.totalPaid ?? 0;
         await loadDailyTotals();
       } catch (error) {

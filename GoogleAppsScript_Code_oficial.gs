@@ -201,21 +201,21 @@ function getTotals() {
   }
 
   const boletaValue = getBoletaValue(sheet);
+  const totalCount = Number(sheet.getRange('G253').getValue() || 0);
   const totalPaid = Number(sheet.getRange('G255').getValue() || 0);
 
   return {
     todayCount,
     todayValue: todayCount * boletaValue,
     totalPaid,
-    boletaValue
+    boletaValue,
+    totalCount
   };
 }
 
 function getBoletaValue(sheet) {
-  const n1 = Number(sheet.getRange('N1').getValue());
-  if (Number.isFinite(n1) && n1 > 0) return n1;
-  const o1 = Number(sheet.getRange('O1').getValue());
-  if (Number.isFinite(o1) && o1 > 0) return o1;
+  const bolValue = Number(sheet.getRange('O1').getValue());
+  if (Number.isFinite(bolValue) && bolValue > 0) return bolValue;
   return 50000;
 }
 
@@ -252,11 +252,12 @@ function ensureDailyTotalRow(date) {
 function getDailyTotals() {
   const sheet = getRegistryByDateSheet();
   const result = [];
-  let row = 260;
+  let row = 1;
 
   while (row <= sheet.getMaxRows()) {
     const dateValue = sheet.getRange(row, 1).getValue();
     if (dateValue === '' || dateValue === null) break;
+    const todayCount = sheet.getRange(row, 2).getValue();
     const totalValue = sheet.getRange(row, 3).getValue();
     result.push({
       date: dateValue,
