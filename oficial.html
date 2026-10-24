@@ -185,7 +185,7 @@
           <button id="loadAssociateBoletas" class="primary" type="button" disabled>Cargar boletas del asociado</button>
           <button id="saveAssociateBoletas" type="button" disabled>Guardar Registradas</button>
           <!--button id="markAll" type="button" disabled>Marcar todas las pendientes</button-->
-          <label class="check-row"><input id="markAll" type="checkbox" /> Marcar todas las pendientes</label>
+         
         </div>
         <div id="associateStatus" class="status" style="display:none;margin-top:12px"></div>
         <div id="associateTable" class="table-wrap" style="margin-top:14px"></div>
@@ -432,10 +432,11 @@
       }).join('');
       container.innerHTML = `
         <table>
-          <thead><tr><th>Números</th><th>Vendida/Pagada</th><th>Fecha entrega</th><th>Registrar Pago</th></tr></thead>
+          <thead><tr><th>Números</th><th>Vendida/Pagada</th><th>Fecha entrega</th><th>Registrar Pago    <label class="check-row"><input id="markAll" type="checkbox" /> Marcar/desmarcar todas</label>  </th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       `;
+      $('#markAll').addEventListener('click', markAllPending);
       const hasPending = boletas.some((item) => !isMarked(item.sold));
       $('#saveAssociateBoletas').disabled = false;
       $('#markAll').disabled = !hasPending;
@@ -459,7 +460,9 @@
     }
 
     function markAllPending() {
-      document.querySelectorAll('.associate-check').forEach((check) => { check.checked = true; });
+      checked = true;
+      if ($('#markAll')) checked = $('#markAll').checked;
+      document.querySelectorAll('.associate-check').forEach((check) => { check.checked = checked; });
       addLog('Todas las boletas pendientes marcadas.', 'ok');
     }
 
@@ -524,7 +527,7 @@
       $('#saveSingle').addEventListener('click', saveSingleBoleta);
       $('#loadAssociateBoletas').addEventListener('click', loadAssociateBoletas);
       $('#saveAssociateBoletas').addEventListener('click', saveAssociateBoletas);
-      $('#markAll').addEventListener('click', markAllPending);
+      //$('#markAll').addEventListener('click', markAllPending);
       loadAssociates().then(loadTotals);
     });
   </script>
