@@ -126,7 +126,8 @@
         <div class="control-row">
           <div class="field">
             <!--label for="appsScriptUrl">URL de la Web App</label-->
-            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbz9kjDqTVtjzhe5vlnZb8w7D-zjeAXwADQIc8W5XcFfO0mepNLtqkrXaVShz-vZfa0k/exec" hidden/>
+            <!--input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbz9kjDqTVtjzhe5vlnZb8w7D-zjeAXwADQIc8W5XcFfO0mepNLtqkrXaVShz-vZfa0k/exec" hidden/-->
+            <input id="appsScriptUrl" value="https://script.google.com/macros/s/AKfycbzyvWDMszqdZLTYmP-PMtTbG0KIX4ToBsZLrPopYyhxDlKWjYDuUwbjCWv18ranx4F0eQ/exec" hidden/>
           </div>
           <button id="reloadData" type="button">Cargar datos</button>
         </div>
@@ -236,7 +237,7 @@
   </main>
 
   <script>
-    const APPS_SCRIPT_URL = localStorage.getItem('comiteAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbz9kjDqTVtjzhe5vlnZb8w7D-zjeAXwADQIc8W5XcFfO0mepNLtqkrXaVShz-vZfa0k/exec';
+    const APPS_SCRIPT_URL = localStorage.getItem('comiteAppsScriptUrl') || 'https://script.google.com/macros/s/AKfycbzyvWDMszqdZLTYmP-PMtTbG0KIX4ToBsZLrPopYyhxDlKWjYDuUwbjCWv18ranx4F0eQ/exec';
     const state = {
       associates: [],
       selectedAssociate: '',
